@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>QR Code Generator</title>
+        <script type="module" src="Chart.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="card" id="card">
+                <input type="text" id="text" placeholder="Paste Text Here (Any characters you want encoded as a QR code)">
+                <button id="generate-qr">Generate QR Code</button>
+                <div id="qr-code-container">
+                    <!-- QR Code will be displayed here -->
+                </div>
+            </div>
+            <div id="history">
+                <h3>Click on a QR code to make it appear here (it's not really saved so don't refresh the page!) <u>Hover</u> over one to display the text used to create it!</h3>
+                <div id="history-container">
+                    <!-- Previous QR Codes will be displayed here -->
+                </div>
+            </div>
+        </div>
+        <script>
+            const historyContainer = document.getElementById('history-container');
+            const qrCodeContainer = document.getElementById('qr-code-container');
+
+            const generateQRCode = (text) => {
+                qrCodeContainer.innerHTML = ''; // Clear previous QR code
+
+                const qrCodeUrl = `https://image-charts.com/chart?chs=300x300&cht=qr&chl=${encodeURIComponent(text)}`;
+                const img = document.createElement('img');
+                img.src = qrCodeUrl;
+                img.alt = 'QR Code';
+                img.title = text; // Show text on hover
+                img.style.cursor = 'pointer'; // Change cursor to pointer
+                img.onclick = () => addToHistory(text, qrCodeUrl); // Add to history on click
+                qrCodeContainer.appendChild(img);
+            };
+
+            const addToHistory = (text, qrCodeUrl) => {
+                const historyItem = document.createElement('img');
+                historyItem.src = qrCodeUrl;
+                historyItem.alt = 'QR Code';
+                historyItem.title = text; // Show text on hover
+                historyItem.style.width = '100px'; // Set a fixed width for history items
+                historyItem.style.margin = '5px';
+                historyItem.style.cursor = 'pointer'; // Change cursor to pointer
+                historyContainer.appendChild(historyItem);
+            };
+
+            document.getElementById('generate-qr').addEventListener('click', () => {
+                const text = document.getElementById('text').value;
+                generateQRCode(text);
+            });
+        </script>
+    </body>
+</html>
